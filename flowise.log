@@ -1,0 +1,18 @@
+npm verbose cli /usr/local/bin/node /usr/local/bin/npm
+npm info using npm@10.9.2
+npm info using node@v22.16.0
+npm verbose title npm run start
+npm verbose argv "run" "start" "--loglevel" "verbose"
+npm verbose logfile logs-max:10 dir:/root/.npm/_logs/2025-06-04T14_03_17_853Z-
+npm verbose logfile /root/.npm/_logs/2025-06-04T14_03_17_853Z-debug-0.log
+
+> flowise@1.6.0 start
+> run-script-os
+
+sh: 1: run-script-os: not found
+npm verbose cwd /usr/local/lib/node_modules/flowise
+npm verbose os Linux 6.12.25-amd64
+npm verbose node v22.16.0
+npm verbose npm  v10.9.2
+npm verbose exit 127
+npm verbose code 127
