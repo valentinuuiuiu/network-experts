@@ -14,8 +14,6 @@ import asyncio
 import logging
 from typing import List, Dict, Any
 
-from superagentx.agent import Agent
-from superagentx.engine import Engine
 from superagentx.agentxpipe import AgentXPipe
 from superagentx.llm import LLMClient
 from superagentx.prompt import PromptTemplate
@@ -25,6 +23,9 @@ from superagentx.memory.storage import SQLiteManager
 from network_experts.handlers.mqtt_handler import MQTTHandler
 from network_experts.handlers.node_red_handler import NodeRedHandler
 from network_experts.handlers.network_scan import NetworkScanHandler
+from network_experts.agents.mqtt_brother import MQTTBrother
+from network_experts.agents.node_red_brother import NodeRedBrother
+from network_experts.agents.scanner_brother import ScannerBrother
 
 #configure llm
 def configure_llm():
@@ -90,78 +91,24 @@ class NetworkExpertsTeam:
         """Initialize all network expert agents"""
         
         # MQTT Brother - The IoT Communication Expert
-        mqtt_engine = Engine(
-            handler=self.mqtt_handler,
-            llm=self.llm_client,
-            prompt_template=self.prompt_template
-        )
-        
-        self.agents["mqtt_brother"] = Agent(
-            name="MQTT Brother",
-            goal="Manage MQTT broker operations and IoT device communications",
-            role="""You are the MQTT Brother, an expert in IoT network communications.
-            Your specialties include:
-            - Discovering MQTT brokers in networks
-            - Publishing and subscribing to MQTT topics
-            - Analyzing MQTT traffic patterns
-            - Managing IoT device communications
-            - Troubleshooting MQTT connectivity issues
-            
-            You work closely with your brothers to provide comprehensive network analysis.""",
-            llm=self.llm_client,
+        self.agents["mqtt_brother"] = MQTTBrother(
+            llm_client=self.llm_client,
             prompt_template=self.prompt_template,
-            engines=[mqtt_engine],
-            max_retry=3
+            mqtt_handler=self.mqtt_handler
         )
         
         # Node-RED Brother - The Workflow Automation Expert
-        node_red_engine = Engine(
-            handler=self.node_red_handler,
-            llm=self.llm_client,
-            prompt_template=self.prompt_template
-        )
-        
-        self.agents["node_red_brother"] = Agent(
-            name="Node-RED Brother",
-            goal="Create and manage visual automation workflows",
-            role="""You are the Node-RED Brother, an expert in visual programming and automation.
-            Your specialties include:
-            - Creating network monitoring flows
-            - Managing Node-RED deployments
-            - Building automation workflows
-            - Integrating different network tools
-            - Visual programming and flow design
-            
-            You help orchestrate complex network operations through visual workflows.""",
-            llm=self.llm_client,
+        self.agents["node_red_brother"] = NodeRedBrother(
+            llm_client=self.llm_client,
             prompt_template=self.prompt_template,
-            engines=[node_red_engine],
-            max_retry=3
+            node_red_handler=self.node_red_handler
         )
         
         # Scanner Brother - The Network Discovery Expert
-        scanner_engine = Engine(
-            handler=self.network_scanner,
-            llm=self.llm_client,
-            prompt_template=self.prompt_template
-        )
-        
-        self.agents["scanner_brother"] = Agent(
-            name="Scanner Brother",
-            goal="Discover and analyze network infrastructure",
-            role="""You are the Scanner Brother, an expert in network discovery and reconnaissance.
-            Your specialties include:
-            - Network host discovery
-            - Port scanning and service detection
-            - Network topology mapping
-            - Asset inventory management
-            - Infrastructure reconnaissance
-            
-            You provide the foundation for all network security operations.""",
-            llm=self.llm_client,
+        self.agents["scanner_brother"] = ScannerBrother(
+            llm_client=self.llm_client,
             prompt_template=self.prompt_template,
-            engines=[scanner_engine],
-            max_retry=3
+            network_scanner=self.network_scanner
         )
         
         # MCP Integration Brother - The External Tools Expert (commented out - MCP not available)

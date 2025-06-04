@@ -10,9 +10,7 @@ try:
     from .agents import (
         ScannerBrother,
         SecurityBrother, 
-        MonitorBrother,
-        ConfigBrother,
-        TroubleshootBrother
+        MonitorBrother
     )
 except ImportError:
     # If relative import fails, raise the error to notify about the missing module
@@ -20,7 +18,7 @@ except ImportError:
 
 from .team import NetworkExpertsTeam # type: ignore
 from .handlers import (
-    DiagnosticsHandler
+    MCPHandler
 )
 
 def info(self):
@@ -30,9 +28,6 @@ __all__ = [
     "ScannerBrother",
     "SecurityBrother", 
     "MonitorBrother",
-    "ConfigBrother",
-    "TroubleshootBrother",
     "NetworkExpertsTeam",
-    "NetworkScanHandler",
-    "DiagnosticsHandler"
+    "MCPHandler"
 ]
