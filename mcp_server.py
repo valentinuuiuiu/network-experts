@@ -426,6 +426,7 @@ async def call_tool(name: str, arguments: Dict[str, Any]) -> List[TextContent]:
 
 
 def create_gradio_interface():
+    auth = ("admin", "openhands")
     """Create Gradio interface for MCP control"""
     with gr.Blocks(title="Network Experts MCP Dashboard") as interface:
         gr.Markdown("# 🛠️ Network Experts MCP Control Panel")
@@ -459,7 +460,7 @@ async def main():
     # Create and launch Gradio interface
     gradio_app = create_gradio_interface()
     gradio_task = asyncio.create_task(
-        gradio_app.launch(server_name="0.0.0.0", server_port=7861, share=False)
+        gradio_app.launch(auth=auth,server_name="0.0.0.0", server_port=7861, share=False)
     )
     
     if len(sys.argv) > 1 and sys.argv[1] == "--sse":
