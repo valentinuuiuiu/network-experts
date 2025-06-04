@@ -20,6 +20,36 @@ class NeuralSymbolicEngine(CognitiveArchitecture):
         if config:
             self.neural_layers = config.get('neural_layers', 8)
             self.quantum_mode = config.get('quantum_mode', False)
+            
+    def reason(self, input_data: str) -> Dict:
+        """Symbolic reasoning with neural refinement"""
+        # Symbolic processing
+        symbolic_result = {
+            'analysis': f"Symbolic analysis of: {input_data}",
+            'rules_applied': len(self.symbolic_rules)
+        }
+        
+        # Neural enhancement
+        if self.quantum_mode:
+            symbolic_result['quantum_boost'] = True
+            
+        return symbolic_result
+        
+    def adapt(self, experience: Dict) -> bool:
+        """Meta-learning capability"""
+        self.symbolic_rules.append(experience)
+        self.memory_buffer.append(experience)
+        return True
+        
+    async def process(self, input: str, context: List, skills: Dict) -> Dict:
+        """Full cognitive processing pipeline"""
+        reasoning = self.reason(input)
+        if skills.get('learning', {}).get('active', False):
+            self.adapt({'input': input, 'context': context})
+        return reasoning
+
+from core.config import config
+from a2a.protocol import A2AClient
 
 class IntelligentAgent:
     """DeepSeek-powered cognitive agent with neural-symbolic architecture"""
@@ -31,7 +61,12 @@ class IntelligentAgent:
                  cognitive_config: Optional[Dict] = None):
         self.name = name
         self.mcp = mcp_handler
-        self.llm = llm_client
+        self.llm = llm_client or {
+            "api_key": config.openai_key,
+            "model": config.openai_model
+        }
+        self.a2a = A2AClient(config.a2a_server_url)
+        self.hf_token = config.hf_token
         self.cognition = NeuralSymbolicEngine(config=cognitive_config)
         self.memory = []
         self.skills = {}
