@@ -6,6 +6,7 @@ Integrates MQTT and Node-RED capabilities as MCP tools
 import asyncio
 import json
 import logging
+import gradio as gr
 from typing import Dict, List, Any, Optional
 
 from mcp.server import Server
@@ -424,19 +425,59 @@ async def call_tool(name: str, arguments: Dict[str, Any]) -> List[TextContent]:
         return [TextContent(type="text", text=error_msg)]
 
 
+def create_gradio_interface():
+    """Create Gradio interface for MCP control"""
+    with gr.Blocks(title="Network Experts MCP Dashboard") as interface:
+        gr.Markdown("# 🛠️ Network Experts MCP Control Panel")
+        
+        with gr.Tab("MQTT Tools"):
+            with gr.Row():
+                mqtt_tool = gr.Dropdown(
+                    ["discover_mqtt_brokers", "publish_mqtt_message", 
+                     "subscribe_mqtt_topic", "analyze_mqtt_traffic"],
+                    label="Select MQTT Tool"
+                )
+            with gr.Row():
+                mqtt_input = gr.JSON(label="Parameters")
+                mqtt_output = gr.JSON(label="Results")
+            mqtt_btn = gr.Button("Execute")
+            mqtt_btn.click(
+                lambda tool, params: asyncio.run(call_tool(tool, params)),
+                inputs=[mqtt_tool, mqtt_input],
+                outputs=mqtt_output
+            )
+
+        with gr.Tab("Network Tools"):
+            # Similar structure for network tools...
+        
+        return interface
+
 async def main():
-    """Run the Network Experts MCP server"""
+    """Run the Network Experts MCP server with Gradio"""
     import sys
     
+    # Create and launch Gradio interface
+    gradio_app = create_gradio_interface()
+    gradio_task = asyncio.create_task(
+        gradio_app.launch(server_name="0.0.0.0", server_port=7861, share=False)
+    )
+    
     if len(sys.argv) > 1 and sys.argv[1] == "--sse":
-        # Run as SSE server
-        async with sse_server(server, host="localhost", port=8080) as (server_instance, url):
-            print(f"Network Experts MCP SSE server running at {url}", file=sys.stderr)
+        async with sse_server(server, host="0.0.0.0", port=8080) as (server_instance, url):
+            print(f"Network Experts MCP running:\n- SSE: {url}\n- Gradio: http://0.0.0.0:7861")
             await server_instance.serve_forever()
     else:
-        # Run as stdio server
+        # Run as stdio server with Gradio
         async with stdio_server() as streams:
-            await server.run(*streams, server.create_initialization_options())
+            print(f"Network Experts MCP running with Gradio at http://0.0.0.0:7861")
+            try:
+                await asyncio.gather(
+                    server.run(*streams, server.create_initialization_options()),
+                    gradio_task
+                )
+            except asyncio.CancelledError:
+                gradio_app.close()
+                raise
 
 
 if __name__ == "__main__":

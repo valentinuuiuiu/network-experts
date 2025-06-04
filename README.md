@@ -119,6 +119,26 @@ Network Experts Team
 
 Each brother specializes in specific network domains while collaborating through SuperAgentX's multi-agent framework.
 
+## Gradio Interface 🖥️
+
+New real-time communication interface available via:
+```bash
+python gradio_interface.py
+```
+
+### Features:
+- Real-time chat with any Network Expert
+- Visual conversation history
+- System status monitoring
+- Ready for Hugging Face Spaces deployment
+
+### Spaces Deployment:
+1. Create new Space on Hugging Face
+2. Set environment variables:
+   - `A2A_SERVER_URL`
+   - `HUGGING_FACE_TOKEN` 
+   - `OPENAI_API_KEY`
+
 ## License
 
 MIT License - See LICENSE file for details.
