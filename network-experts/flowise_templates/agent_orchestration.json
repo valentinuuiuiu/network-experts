@@ -1,0 +1,12 @@
+{
+  "nodes": [
+    {
+      "id": "network-scan",
+      "type": "httpRequest",
+      "data": {
+        "url": "http://localhost:8000/agent/scanner_brother/trigger",
+        "method": "POST"
+      }
+    }
+  ]
+}
