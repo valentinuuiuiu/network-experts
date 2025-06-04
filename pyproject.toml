@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "network_experts"}]
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = ">=3.12,<=3.13"
 superagentx = "^0.1.17.6"
 pydantic = "^2.8.2"
 openai = "^1.47.1"
