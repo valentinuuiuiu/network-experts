@@ -19,12 +19,14 @@ class MonitorBrother(Agent):
             engines=[mcp_handler],
             access_level="black"
         )
+        self.knowledge_base = {}
         
     async def surveil(self, target: str, duration: int = 3600):
         """Execute MCP-powered surveillance"""
-        return await self.engines[0].execute({
+        payload = {
             "operation": "network_surveillance",
             "target": target,
             "duration": duration,
             "tools": ["zeek", "snort", "suricata"]
-        })
+        }
+        return await self.engines[0].execute(payload, agent=self)
