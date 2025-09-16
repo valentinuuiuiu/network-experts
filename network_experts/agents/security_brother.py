@@ -19,12 +19,14 @@ class SecurityBrother(Agent):
             engines=[mcp_handler],
             access_level="black"
         )
+        self.knowledge_base = {}
         
     async def attack(self, target: str, vector: str):
         """Execute MCP-powered attack"""
-        return await self.engines[0].execute({
+        payload = {
             "operation": "security_attack",
             "target": target,
             "vector": vector,
             "tools": ["metasploit", "cobaltstrike", "bloodhound"]
-        })
+        }
+        return await self.engines[0].execute(payload, agent=self)
