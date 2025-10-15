@@ -18,14 +18,19 @@ from superagentx.agentxpipe import AgentXPipe
 from superagentx.llm import LLMClient
 from superagentx.prompt import PromptTemplate
 from superagentx.memory.storage import SQLiteManager
-# from superagentx.handler.mcp import MCPHandler  # Not available in this version
+from superagentx.handler.mcp import MCPHandler
+from superagentx.agent import Agent
+from superagentx.engine import Engine
 
 from network_experts.handlers.mqtt_handler import MQTTHandler
 from network_experts.handlers.node_red_handler import NodeRedHandler
 from network_experts.handlers.network_scan import NetworkScanHandler
+from network_experts.handlers.traffic_analyzer import TrafficAnalyzerHandler
+
 from network_experts.agents.mqtt_brother import MQTTBrother
 from network_experts.agents.node_red_brother import NodeRedBrother
 from network_experts.agents.scanner_brother import ScannerBrother
+from network_experts.agents.traffic_brother import TrafficBrother
 
 #configure llm
 def configure_llm():
@@ -76,12 +81,13 @@ class NetworkExpertsTeam:
         self.mqtt_handler = MQTTHandler()
         self.node_red_handler = NodeRedHandler()
         self.network_scanner = NetworkScanHandler()
+        self.traffic_analyzer = TrafficAnalyzerHandler()
         
-        # Initialize MCP handler for external tool integration (commented out - not available in this version)
-        # self.mcp_handler = MCPHandler(
-        #     command="python",
-        #     mcp_args=["-m", "network_experts.mcp_server"]
-        # )
+        # Initialize MCP handler for external tool integration
+        self.mcp_handler = MCPHandler(
+            command="python",
+            mcp_args=["-m", "network_experts.mcp_server"]
+        )
         
         self.agents = {}
         self.engines = {}
@@ -111,31 +117,11 @@ class NetworkExpertsTeam:
             network_scanner=self.network_scanner
         )
         
-        # MCP Integration Brother - The External Tools Expert (commented out - MCP not available)
-        # mcp_engine = Engine(
-        #     handler=self.mcp_handler,
-        #     llm=self.llm_client,
-        #     prompt_template=self.prompt_template
-        # )
-        
-        # MCP Integration Brother - commented out (MCP not available in this version)
-        # self.agents["mcp_brother"] = Agent(
-        #     name="MCP Integration Brother",
-        #     goal="Integrate external network tools and services",
-        #     role="""You are the MCP Integration Brother, an expert in tool integration.
-        #     Your specialties include:
-        #     - Coordinating with external MCP servers
-        #     - Integrating third-party network tools
-        #     - Managing complex tool workflows
-        #     - Orchestrating multi-tool operations
-        #     - Providing unified access to distributed tools
-        #     
-        #     You ensure seamless integration of all network analysis capabilities.""",
-        #     llm=self.llm_client,
-        #     prompt_template=self.prompt_template,
-        #     engines=[mcp_engine],
-        #     max_retry=3
-        # )
+        # Traffic Brother - The Network Traffic Analysis Expert
+        self.agents["traffic_brother"] = TrafficBrother(
+            llm_client=self.llm_client,
+            traffic_analyzer=self.traffic_analyzer
+        )
         
         # Create the team pipeline
         self.team_pipe = AgentXPipe(

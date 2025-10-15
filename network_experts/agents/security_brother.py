@@ -1,6 +1,6 @@
 from superagentx.agent import Agent
 from typing import Optional
-from network_experts.handlers.mcp_handler import MCPHandler
+from superagentx.handler.mcp import MCPHandler
 
 class SecurityBrother(Agent):
     """Offensive Security Specialist powered by MCP"""
