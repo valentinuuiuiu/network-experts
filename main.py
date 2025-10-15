@@ -25,12 +25,12 @@ from superagentx.engine import Engine
 from network_experts.handlers.mqtt_handler import MQTTHandler
 from network_experts.handlers.node_red_handler import NodeRedHandler
 from network_experts.handlers.network_scan import NetworkScanHandler
+from network_experts.handlers.traffic_analyzer import TrafficAnalyzerHandler
 
 from network_experts.agents.mqtt_brother import MQTTBrother
 from network_experts.agents.node_red_brother import NodeRedBrother
 from network_experts.agents.scanner_brother import ScannerBrother
-from network_experts.agents.security_brother import SecurityBrother
-from network_experts.agents.monitor_brother import MonitorBrother
+from network_experts.agents.traffic_brother import TrafficBrother
 
 #configure llm
 def configure_llm():
@@ -81,6 +81,7 @@ class NetworkExpertsTeam:
         self.mqtt_handler = MQTTHandler()
         self.node_red_handler = NodeRedHandler()
         self.network_scanner = NetworkScanHandler()
+        self.traffic_analyzer = TrafficAnalyzerHandler()
         
         # Initialize MCP handler for external tool integration
         self.mcp_handler = MCPHandler(
@@ -116,16 +117,10 @@ class NetworkExpertsTeam:
             network_scanner=self.network_scanner
         )
         
-        # Security Brother - The Vulnerability Assessment Expert
-        self.agents["security_brother"] = SecurityBrother(
+        # Traffic Brother - The Network Traffic Analysis Expert
+        self.agents["traffic_brother"] = TrafficBrother(
             llm_client=self.llm_client,
-            mcp_handler=self.mcp_handler
-        )
-
-        # Monitor Brother - The Network Health Expert
-        self.agents["monitor_brother"] = MonitorBrother(
-            llm_client=self.llm_client,
-            mcp_handler=self.mcp_handler
+            traffic_analyzer=self.traffic_analyzer
         )
         
         # Create the team pipeline
