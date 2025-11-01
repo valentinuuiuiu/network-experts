@@ -2,7 +2,7 @@ import os
 import asyncio
 from openai import AsyncOpenAI
 from network_experts.intelligent_agents import IntelligentAgent
-from network_experts.handlers.mcp_handler import MCPHandler
+from superagentx.handler.mcp import MCPHandler
 
 async def test_agents():
     # Initialize with environment variable

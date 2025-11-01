@@ -1,6 +1,6 @@
 from typing import List
 from .agents import ScannerBrother, SecurityBrother, MonitorBrother
-from .handlers.mcp_handler import MCPHandler
+from superagentx.handler.mcp import MCPHandler
 
 class NetworkExpertsTeam:
     """Orchestrates collaboration between expert agents"""

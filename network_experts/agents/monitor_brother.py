@@ -1,11 +1,13 @@
 from superagentx.agent import Agent
 from typing import Optional
 from superagentx.handler.mcp import MCPHandler
+from superagentx.prompt import PromptTemplate
+from superagentx.llm import LLMClient
 
 class MonitorBrother(Agent):
     """Network Surveillance Specialist powered by MCP"""
     
-    def __init__(self, mcp_handler: MCPHandler, llm_client: Optional = None):
+    def __init__(self, mcp_handler: MCPHandler, llm_client: LLMClient, prompt_template: PromptTemplate):
         super().__init__(
             name="Monitor Brother [MCP-Enabled]",
             goal="Maintain persistent network surveillance and anomaly detection",
@@ -17,7 +19,7 @@ class MonitorBrother(Agent):
             - Stealth persistence""",
             llm=llm_client,
             engines=[mcp_handler],
-            access_level="black"
+            prompt_template=prompt_template
         )
         self.knowledge_base = {}
         

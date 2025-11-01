@@ -17,9 +17,6 @@ except ImportError:
     raise
 
 from .team import NetworkExpertsTeam # type: ignore
-from .handlers import (
-    MCPHandler
-)
 
 def info(self):
     return "NetworkExpertsTeam"
@@ -28,6 +25,5 @@ __all__ = [
     "ScannerBrother",
     "SecurityBrother", 
     "MonitorBrother",
-    "NetworkExpertsTeam",
-    "MCPHandler"
+    "NetworkExpertsTeam"
 ]
